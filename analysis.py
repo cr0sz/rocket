@@ -3,10 +3,13 @@ from stable_baselines3 import PPO
 from rocket_env import RocketEnv
 from ceiling import landable_ranges
 
+EXTENDED = True                  # must match the setting you trained with
+NAME = "ppo_rocket_ext_seed" if EXTENDED else "ppo_rocket_seed"
 
-def analyze(model, games=4000):
+
+def analyze(model, games=4000, extended=False):
     ranges = landable_ranges()
-    env = RocketEnv()
+    env = RocketEnv(extended=extended)
     env.reset(seed=7)
 
     games_in_band = {}      # start-altitude band -> how many games
@@ -56,5 +59,5 @@ def analyze(model, games=4000):
 
 
 if __name__ == "__main__":
-    model = PPO.load("ppo_rocket_seed0")
-    analyze(model)
+    model = PPO.load(f"{NAME}0")
+    analyze(model, extended=EXTENDED)

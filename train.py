@@ -2,11 +2,15 @@ from stable_baselines3 import PPO
 from stable_baselines3.common.env_util import make_vec_env
 from rocket_env import RocketEnv
 
-SEEDS = [1, 2, 3, 4]                      # later: [0, 1, 2, 3, 4]
-STEPS = 1_000_000                  # first a short test, then change to 1_000_000
+EXTENDED = True                  # False = basic inputs (3 numbers), True = plus 4 forecast inputs
+SEEDS = [3, 4]                   # seeds 0, 1, 2 are already trained
+STEPS = 1_000_000
+
+NAME = "ppo_rocket_ext_seed" if EXTENDED else "ppo_rocket_seed"
 
 for seed in SEEDS:
-    env = make_vec_env(RocketEnv, n_envs=8, seed=seed)
+    env = make_vec_env(RocketEnv, n_envs=8, seed=seed, env_kwargs=dict(extended=EXTENDED),
+                       monitor_dir=f"logs/{NAME}{seed}")   # saves a log of every game, for the learning curve
     model = PPO(
         "MlpPolicy",
         env,
@@ -21,6 +25,5 @@ for seed in SEEDS:
         verbose=1,
     )
     model.learn(total_timesteps=STEPS)
-    model.save(f"ppo_rocket_seed{seed}")
-    print("saved ppo_rocket_seed" + str(seed))
-    
+    model.save(f"{NAME}{seed}")
+    print("saved " + NAME + str(seed))
