@@ -76,22 +76,25 @@ def make_autopilot(c, d):
 
 
 # ---- everything below RUNS code, so it goes AFTER all the defs ----
+# The guard below means: only run this when you run rocket.py directly,
+# NOT when another file does "import rocket".
+if __name__ == "__main__":
 
-# baselines
-print(win_rate(never_burn))
-print(win_rate(always_burn))
-print(win_rate(burn_if_fast))
-print(win_rate(burn_if_low))
+    # baselines
+    print(win_rate(never_burn))
+    print(win_rate(always_burn))
+    print(win_rate(burn_if_fast))
+    print(win_rate(burn_if_low))
 
-# the sweep: try every (c, d), keep every result
-results = []
-for c in range(1, 11):
-    for d in range(-100, 101, 10):
-        score = win_rate(make_autopilot(c, d), 300)
-        results.append((score, c, d))
+    # the sweep: try every (c, d), keep every result
+    results = []
+    for c in range(1, 11):
+        for d in range(-100, 101, 10):
+            score = win_rate(make_autopilot(c, d), 300)
+            results.append((score, c, d))
 
-results.sort(reverse=True)
+    results.sort(reverse=True)
 
-print("top 3 re-tested with 20000 games:")
-for score, c, d in results[:3]:
-    print(c, d, "sweep:", score, "real:", win_rate(make_autopilot(c, d), 20000))
+    print("top 3 re-tested with 20000 games:")
+    for score, c, d in results[:3]:
+        print(c, d, "sweep:", score, "real:", win_rate(make_autopilot(c, d), 20000))
