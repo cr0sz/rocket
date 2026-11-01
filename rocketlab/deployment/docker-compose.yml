@@ -1,0 +1,62 @@
+# RocketLab Docker Compose
+# Deploy on the Oracle ARM64 server.
+# The dashboard is bound to 127.0.0.1:8080 by default (SSH tunnel access).
+# Use: docker compose up -d
+
+services:
+  db:
+    image: postgres:16-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: rocketlab
+      POSTGRES_PASSWORD: rocketlab
+      POSTGRES_DB: rocketlab
+    volumes:
+      - rocketlab_db_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U rocketlab -d rocketlab"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    ports:
+      - "127.0.0.1:5432:5432"
+
+  backend:
+    build:
+      context: ../backend
+      dockerfile: Dockerfile
+    restart: unless-stopped
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      DATABASE_URL: postgresql+psycopg://rocketlab:rocketlab@db:5432/rocketlab
+      SECRET_KEY: ${SECRET_KEY:-change-me-in-production}
+      ADMIN_TOKEN: ${ADMIN_TOKEN:-admin-change-me}
+      WORKER_TOKEN: ${WORKER_TOKEN:-worker-change-me}
+      SEED_DEMO_DATA: "true"
+      BACKEND_CORS_ORIGINS: "*"
+    ports:
+      - "127.0.0.1:8080:8080"
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://127.0.0.1:8080/health')"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+    volumes:
+      - ./backend:/app/backend:ro  # not used in prod; kept for reference
+
+  frontend:
+    build:
+      context: ../frontend
+      dockerfile: Dockerfile
+    restart: unless-stopped
+    depends_on:
+      - backend
+    environment:
+      VITE_API_URL: http://127.0.0.1:8080
+    ports:
+      - "127.0.0.1:3000:3000"
+
+volumes:
+  rocketlab_db_data:
