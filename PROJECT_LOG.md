@@ -70,21 +70,21 @@ curl http://152.70.40.141:8000/health (and /runs, /summary) from outside.
 - Dashboard deployed at / and /dashboard (commit 1ecb97e).
 - External access confirmed: /, /dashboard, /health, /summary all return 200.
 
-## Domain: crossrocket.duckdns.org (pending)
-- To use the domain: point crossrocket.duckdns.org -> 152.70.40.141 via DuckDNS
-  (DuckDNS account/token needed; set the A record to the Oracle IP).
-- Once DNS resolves, add a Caddy reverse-proxy block to /home/ubuntu/stack/Caddyfile
-  (bind-mounted, read-only) and restart the stack-caddy-1 container:
+## Domain: crossrocket.duckdns.org (LIVE)
+- DNS resolves crossrocket.duckdns.org -> 152.70.40.141 (verified).
+- Caddy reverse proxy added to /home/ubuntu/stack/Caddyfile:
     crossrocket.duckdns.org {
-        reverse_proxy localhost:8000
+        reverse_proxy aerorl-backend:8000
     }
-  Caddy will auto-provision HTTPS via Let's Encrypt. Existing n8n block
-  (crossn8n.duckdns.org -> n8n:5678) is untouched.
-- Do NOT modify Caddyfile until DNS is set, otherwise cert issuance fails.
+  (aerorl-backend connected to stack_default network so Caddy can reach it.)
+- Caddy auto-provisioned Let's Encrypt HTTPS. External:
+    https://crossrocket.duckdns.org/health -> 200 {"status":"ok"}
+    https://crossrocket.duckdns.org/ -> dashboard
+    https://crossrocket.duckdns.org/summary -> JSON
+- Existing n8n block (crossn8n.duckdns.org -> n8n:5678) untouched.
 
 ## Phase F (optional) — README + GitHub Actions
 - Not done yet: README with curl examples + GitHub Actions workflow running
   pytest in backend/.
 
-Next (user): set crossrocket.duckdns.org -> 152.70.40.141 in DuckDNS, then I'll
-add the Caddy reverse proxy for HTTPS on the domain.
+Next: none required. The API is live on HTTPS at crossrocket.duckdns.org.
