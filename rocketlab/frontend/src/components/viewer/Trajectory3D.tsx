@@ -13,16 +13,28 @@ interface TrajectoryPoint {
   throttle: number
 }
 
-interface Trajectory3DProps {
+interface TrajectorySeries {
   points: TrajectoryPoint[]
+  color: string
+  label: string
+}
+
+interface Trajectory3DProps {
+  points?: TrajectoryPoint[]
+  series?: TrajectorySeries[]
   landingSuccess?: boolean | null
   touchdownVelocity?: number | null
 }
 
-export function Trajectory3D({ points, landingSuccess: _landingSuccess, touchdownVelocity: _touchdownVelocity }: Trajectory3DProps) {
+const DEFAULT_COLORS = ["#3b82f6", "#22c55e", "#f59e0b", "#ef4444", "#a855f7", "#06b6d4"]
+
+export function Trajectory3D({ points, series, landingSuccess: _landingSuccess, touchdownVelocity: _touchdownVelocity }: Trajectory3DProps) {
   const containerRef = useRef<HTMLDivElement>(null)
   const [telemetry, setTelemetry] = useState<{ t: number; alt: number; speed: number; fuel: number } | null>(null)
   const [playing, setPlaying] = useState(true)
+
+  // Build normalized series list
+  const allSeries: TrajectorySeries[] = useMemoSeries(points, series)
 
   useEffect(() => {
     if (!containerRef.current) return
@@ -47,8 +59,6 @@ export function Trajectory3D({ points, landingSuccess: _landingSuccess, touchdow
     const controls = new OrbitControls(camera, renderer.domElement)
     controls.enableDamping = true
     controls.dampingFactor = 0.06
-    controls.autoRotate = false
-    controls.autoRotateSpeed = 1.0
 
     // Ground plane
     const groundGeo = new THREE.PlaneGeometry(500, 500, 64, 64)
@@ -67,79 +77,72 @@ export function Trajectory3D({ points, landingSuccess: _landingSuccess, touchdow
     scene.add(grid)
 
     // Landing target on ground
-    const targetMat = new THREE.MeshBasicMaterial({ color: 0xef4444 })
     const targetGeo = new THREE.RingGeometry(2, 5, 32)
+    const targetMat = new THREE.MeshBasicMaterial({ color: 0xef4444 })
     const target = new THREE.Mesh(targetGeo, targetMat)
     target.rotation.x = -Math.PI / 2
     target.position.set(0, 0.05, 0)
     scene.add(target)
 
-    // Target pulse ring
-    const pulseGeo = new THREE.RingGeometry(4, 6, 64)
-    const pulseMat = new THREE.MeshBasicMaterial({ color: 0xef4444, transparent: true, opacity: 0 })
-    const pulse = new THREE.Mesh(pulseGeo, pulseMat)
-    pulse.rotation.x = -Math.PI / 2
-    pulse.position.set(0, 0.06, 0)
-    scene.add(pulse)
+    const rocketGroups: THREE.Group[] = []
+    const totals: number[] = []
 
-    // Trajectory line
-    let trajectoryLine: THREE.Line | null = null
-    if (points && points.length > 1) {
-      const trajPts = points.map((p) => new THREE.Vector3(p.x_m, p.z_m, p.y_m))
-      const trajGeo = new THREE.BufferGeometry().setFromPoints(trajPts)
-      const trajMat = new THREE.LineBasicMaterial({
-        color: 0x3b82f6,
-        transparent: true,
-        opacity: 0.35,
-      })
-      trajectoryLine = new THREE.Line(trajGeo, trajMat)
-      scene.add(trajectoryLine)
-    }
+    allSeries.forEach((s) => {
+      if (s.points.length > 1) {
+        const trajPts = s.points.map((p) => new THREE.Vector3(p.x_m, p.z_m, p.y_m))
+        const trajGeo = new THREE.BufferGeometry().setFromPoints(trajPts)
+        const trajMat = new THREE.LineBasicMaterial({
+          color: s.color,
+          transparent: true,
+          opacity: 0.35,
+        })
+        const line = new THREE.Line(trajGeo, trajMat)
+        scene.add(line)
+      }
 
-    // Start marker (green)
-    let startMarker: THREE.Mesh | null = null
-    if (points && points.length > 0) {
-      const startGeo = new THREE.SphereGeometry(1.2, 16, 16)
-      const startMat = new THREE.MeshBasicMaterial({ color: 0x22c55e })
-      startMarker = new THREE.Mesh(startGeo, startMat)
-      startMarker.position.set(points[0].x_m, points[0].z_m, points[0].y_m + 1)
-      scene.add(startMarker)
-    }
+      // Start marker
+      if (s.points.length > 0) {
+        const startGeo = new THREE.SphereGeometry(1.0, 12, 12)
+        const startMat = new THREE.MeshBasicMaterial({ color: 0x22c55e })
+        const startMarker = new THREE.Mesh(startGeo, startMat)
+        startMarker.position.set(s.points[0].x_m, s.points[0].z_m, s.points[0].y_m + 1)
+        scene.add(startMarker)
+      }
 
-    // Landing marker (red if crashed, green if landed)
-    let landMarker: THREE.Mesh | null = null
-    if (points && points.length > 0) {
-      const last = points[points.length - 1]
-      const landGeo = new THREE.SphereGeometry(1.2, 16, 16)
-      const landMat = new THREE.MeshBasicMaterial({
-        color: _landingSuccess === true ? 0x22c55e : 0xef4444,
-      })
-      landMarker = new THREE.Mesh(landGeo, landMat)
-      landMarker.position.set(last.x_m, last.z_m, last.y_m + 1)
-      scene.add(landMarker)
-    }
+      // Landing marker
+      if (s.points.length > 0) {
+        const last = s.points[s.points.length - 1]
+        const landGeo = new THREE.SphereGeometry(1.0, 12, 12)
+        const landMat = new THREE.MeshBasicMaterial({ color: 0xef4444 })
+        const landMarker = new THREE.Mesh(landGeo, landMat)
+        landMarker.position.set(last.x_m, last.z_m, last.y_m + 1)
+        scene.add(landMarker)
+      }
 
-    // Rocket mesh
-    const rocketGroup = new THREE.Group()
-    const body = new THREE.Mesh(
-      new THREE.CylinderGeometry(0.5, 0.5, 3.5, 16),
-      new THREE.MeshStandardMaterial({ color: 0x3b82f6, emissive: 0x1e3a8a }),
-    )
-    body.rotation.x = Math.PI / 2
-    const nose = new THREE.Mesh(
-      new THREE.ConeGeometry(0.5, 1.8, 16),
-      new THREE.MeshStandardMaterial({ color: 0x60a5fa }),
-    )
-    nose.position.y = 1.9
-    nose.rotation.x = Math.PI / 2
-    const flame = new THREE.Mesh(
-      new THREE.ConeGeometry(0.35, 1.2, 12),
-      new THREE.MeshBasicMaterial({ color: 0xfbbf24 }),
-    )
-    flame.position.y = -2.6
-    flame.rotation.x = Math.PI / 2
-    rocketGroup.add(body, nose, flame)
-    scene.add(rocketGroup)
+      // Rocket mesh
+      const rocketGroup = new THREE.Group()
+      const body = new THREE.Mesh(
+        new THREE.CylinderGeometry(0.5, 0.5, 3.5, 12),
+        new THREE.MeshStandardMaterial({ color: s.color as string, emissive: 0x1e3a8a }),
+      )
+      body.rotation.x = Math.PI / 2
+      const nose = new THREE.Mesh(
+        new THREE.ConeGeometry(0.5, 1.8, 12),
+        new THREE.MeshStandardMaterial({ color: s.color as string }),
+      )
+      nose.position.y = 1.9
+      nose.rotation.x = Math.PI / 2
+      const flame = new THREE.Mesh(
+        new THREE.ConeGeometry(0.35, 1.2, 10),
+        new THREE.MeshBasicMaterial({ color: 0xfbbf24 }),
+      )
+      flame.position.y = -2.6
+      flame.rotation.x = Math.PI / 2
+      rocketGroup.add(body, nose, flame)
+      scene.add(rocketGroup)
+      rocketGroups.push(rocketGroup)
+      totals.push(s.points.length)
+    })
 
     // Lights
     const ambientLight = new THREE.AmbientLight(0xffffff, 0.25)
@@ -148,38 +151,41 @@ export function Trajectory3D({ points, landingSuccess: _landingSuccess, touchdow
     dirLight.position.set(50, 100, 50)
     scene.add(dirLight)
 
-    // Animation state
     let frame = 0
-    const total = points.length
+    const total = Math.max(...totals)
     let animId: number
 
     const animate = () => {
       animId = requestAnimationFrame(animate)
       controls.update()
 
-      // Pulse animation
-      const time = Date.now() / 1000
-      pulse.scale.set(1 + Math.sin(time * 3) * 0.3, 1 + Math.sin(time * 3) * 0.3, 1)
-      pulse.material.opacity = 0.3 + Math.sin(time * 3) * 0.2
-
       if (playing && total > 0) {
         frame = (frame + 1) % total
-        const pt = points[frame]
-        rocketGroup.position.set(pt.x_m, pt.z_m, pt.y_m)
-        rocketGroup.lookAt(
-          points[(frame + 1) % total]?.x_m ?? pt.x_m,
-          points[(frame + 1) % total]?.z_m ?? pt.z_m,
-          points[(frame + 1) % total]?.y_m ?? pt.y_m,
-        )
-        flame.scale.y = pt.throttle > 0 ? 1 : 0.15
-        flame.material.color = pt.throttle > 0 ? new THREE.Color(0xfbbf24) : new THREE.Color(0x334155)
-
-        setTelemetry({
-          t: pt.t_s,
-          alt: pt.altitude_m,
-          speed: pt.speed_mps,
-          fuel: pt.fuel_kg,
+        rocketGroups.forEach((rg, si) => {
+          const s = allSeries[si]
+          const pts = s.points
+          if (pts.length === 0) return
+          const fi = Math.min(frame, pts.length - 1)
+          const pt = pts[fi]
+          rg.position.set(pt.x_m, pt.z_m, pt.y_m)
+          const nextFi = Math.min(fi + 1, pts.length - 1)
+          const nextPt = pts[nextFi]
+          rg.lookAt(nextPt.x_m, nextPt.z_m, nextPt.y_m)
+          const flame = rg.children[2] as THREE.Mesh
+          flame.scale.y = pt.throttle > 0 ? 1 : 0.15
+          ;(flame.material as THREE.MeshBasicMaterial).color = pt.throttle > 0 ? new THREE.Color(0xfbbf24) : new THREE.Color(0x334155)
         })
+
+        const firstSeries = allSeries[0]
+        if (firstSeries && firstSeries.points.length > 0) {
+          const firstPt = firstSeries.points[Math.min(frame, firstSeries.points.length - 1)]
+          setTelemetry({
+            t: firstPt.t_s,
+            alt: firstPt.altitude_m,
+            speed: firstPt.speed_mps,
+            fuel: firstPt.fuel_kg,
+          })
+        }
       }
 
       renderer.render(scene, camera)
@@ -209,9 +215,9 @@ export function Trajectory3D({ points, landingSuccess: _landingSuccess, touchdow
       })
       if (containerRef.current) containerRef.current.removeChild(renderer.domElement)
     }
-  }, [points, _landingSuccess, playing])
+  }, [allSeries, playing])
 
-  if (!points || points.length === 0) {
+  if (!allSeries || allSeries.length === 0 || allSeries.every((s) => s.points.length === 0)) {
     return (
       <div ref={containerRef} className="w-full h-[520px] bg-[#0e1524]/50 border border-slate-800 rounded-xl flex items-center justify-center text-slate-500">
         No trajectory data
@@ -219,11 +225,19 @@ export function Trajectory3D({ points, landingSuccess: _landingSuccess, touchdow
     )
   }
 
+  const legend = allSeries.map((s, i) => (
+    <span key={i} className="flex items-center gap-1.5 text-xs text-slate-300 mr-3">
+      <span className="w-2 h-2 rounded-full" style={{ backgroundColor: s.color }} />
+      {s.label}
+    </span>
+  ))
+
   return (
     <div className="w-full h-[520px] bg-[#0e1524]/50 border border-slate-800 rounded-xl relative overflow-hidden">
       <div ref={containerRef} className="absolute inset-0" />
       <div className="absolute bottom-4 left-4 right-4 p-4 bg-[#070b14]/90 backdrop-blur border border-slate-800 rounded-lg">
-        <div className="flex flex-wrap items-center gap-4 text-xs text-slate-300">
+        <div className="flex flex-wrap items-center gap-4 text-xs text-slate-300 mb-2">
+          {legend}
           <div className="flex items-center gap-1">
             <span className="w-2 h-2 rounded-full" style={{ backgroundColor: "#3b82f6" }} />
             <span>T: {telemetry?.t.toFixed?.(1) ?? "—"}s</span>
@@ -253,4 +267,10 @@ export function Trajectory3D({ points, landingSuccess: _landingSuccess, touchdow
       </div>
     </div>
   )
+}
+
+function useMemoSeries(points?: TrajectoryPoint[], series?: TrajectorySeries[]): TrajectorySeries[] {
+  if (series && series.length > 0) return series
+  if (points && points.length > 0) return [{ points, color: DEFAULT_COLORS[0], label: "Run" }]
+  return []
 }

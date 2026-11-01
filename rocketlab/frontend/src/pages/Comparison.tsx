@@ -1,13 +1,15 @@
 import { useEffect, useState } from "react"
-import { listRuns } from "@/services/api"
+import { listRuns, getTelemetry } from "@/services/api"
 import { Run } from "@/types"
 import { Trajectory3D } from "@/components/viewer/Trajectory3D"
 import { Activity } from "lucide-react"
 import { Badge } from "@/components/ui/Badge"
+import { AltitudeChart, VelocityChart, FuelChart } from "@/components/charts/TelemetryCharts"
 
 export default function ComparisonPage() {
   const [runs, setRuns] = useState<Run[]>([])
   const [selected, setSelected] = useState<Set<string>>(new Set())
+  const [telemetryMap, setTelemetryMap] = useState<Map<string, any[]>>(new Map())
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
@@ -23,14 +25,34 @@ export default function ComparisonPage() {
   const toggle = (id: string) => {
     setSelected((prev) => {
       const next = new Set(prev)
-      if (next.has(id)) next.delete(id)
-      else next.add(id)
+      if (next.has(id)) {
+        next.delete(id)
+        setTelemetryMap((m) => { m.delete(id); return new Map(m) })
+      } else {
+        next.add(id)
+        fetchTelemetry(id)
+      }
       return next
     })
   }
 
+  async function fetchTelemetry(id: string) {
+    try {
+      const res = await getTelemetry(id, { limit: 5000 })
+      setTelemetryMap((m) => new Map(m).set(id, res.data))
+    } catch (e) {
+      console.error("Failed to fetch telemetry", e)
+    }
+  }
+
   const isSelected = (id: string) => selected.has(id)
   const selectedRuns = runs.filter((r) => selected.has(r.id))
+
+  const series = selectedRuns.map((r, i) => ({
+    points: telemetryMap.get(r.id) || [],
+    color: ["#3b82f6", "#22c55e", "#f59e0b"][i % 3],
+    label: `${r.algorithm.toUpperCase()} seed=${r.seed ?? "?"}`,
+  }))
 
   if (loading) return <div className="text-slate-500 text-sm">Loading runs…</div>
 
@@ -40,7 +62,7 @@ export default function ComparisonPage() {
         <div>
           <h1 className="text-2xl font-bold text-white tracking-tight">Experiment Comparison</h1>
           <p className="text-slate-400 text-sm">
-            Select up to 3 runs to compare trajectories and metrics
+            Select up to 3 runs to overlay trajectories and compare metrics
           </p>
         </div>
         {selectedRuns.length > 0 && (
@@ -53,6 +75,7 @@ export default function ComparisonPage() {
         )}
       </div>
 
+      {/* Run selection table */}
       <div className="border border-slate-800 rounded-xl bg-[#0e1524]/50 p-4 overflow-x-auto">
         <table className="w-full text-left border-collapse">
           <thead>
@@ -117,7 +140,7 @@ export default function ComparisonPage() {
             <div className="bg-[#0e1524]/50 border border-slate-800 rounded-xl p-4">
               <h3 className="text-xs font-semibold text-slate-400 mb-3 uppercase tracking-wider">3D Trajectories (Overlay)</h3>
               <div className="h-[400px]">
-                <Trajectory3D points={[]} />
+                <Trajectory3D series={series} />
               </div>
             </div>
             <div className="space-y-4">
@@ -127,7 +150,7 @@ export default function ComparisonPage() {
                   <tr className="border-b border-slate-800 mb-2">
                     <th className="px-3 py-2 text-left text-slate-400">Metric</th>
                     {selectedRuns.map((r) => (
-                      <th key={r.id} className="px-3 py-2 text-right text-slate-400 truncate max-w-[120px]" title={r.id.slice(0, 8)}>
+                      <th key={r.id} className="px-3 py-2 text-right text-slate-400 truncate max-w-[120px]" title={`${r.algorithm} seed=${r.seed}`}>
                         {r.id.slice(0, 8)}
                       </th>
                     ))}
@@ -168,6 +191,34 @@ export default function ComparisonPage() {
                   </tr>
                 </tbody>
               </table>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Multi-line charts */}
+      {selectedRuns.length > 0 && (
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+          <div className="lg:col-span-2">
+            <div className="bg-[#0e1524]/50 border border-slate-800 rounded-xl p-4">
+              <h3 className="text-xs font-semibold text-slate-400 mb-3 uppercase tracking-wider">Altitude vs Time</h3>
+              <div className="h-[280px]">
+                <AltitudeChart data={[]} series={series} />
+              </div>
+            </div>
+          </div>
+          <div className="lg:col-span-1">
+            <div className="bg-[#0e1524]/50 border border-slate-800 rounded-xl p-4">
+              <h3 className="text-xs font-semibold text-slate-400 mb-3 uppercase tracking-wider">Velocity vs Time</h3>
+              <div className="h-[280px]">
+                <VelocityChart data={[]} series={series} />
+              </div>
+            </div>
+            <div className="bg-[#0e1524]/50 border border-slate-800 rounded-xl p-4 mt-4">
+              <h3 className="text-xs font-semibold text-slate-400 mb-3 uppercase tracking-wider">Fuel vs Time</h3>
+              <div className="h-[280px]">
+                <FuelChart data={[]} series={series} />
+              </div>
             </div>
           </div>
         </div>

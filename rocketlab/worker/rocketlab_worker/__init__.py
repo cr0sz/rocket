@@ -10,6 +10,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import os
 import platform
 import sys
 import time
@@ -19,7 +20,7 @@ from typing import Any, Dict, List, Optional
 
 import requests
 
-from rocketlab_worker.simulator import DemoSimulationAdapter
+from rocketlab_worker.adapter_registry import get_adapter, DemoSimulationAdapter, AeroRocketAdapter, SimulationAdapter
 
 
 class WorkerClient:
@@ -30,7 +31,6 @@ class WorkerClient:
         self.hostname = hostname
         self.cpu_info = cpu_info
         self.worker_id: Optional[str] = None
-        self.adapter = DemoSimulationAdapter()
 
     def register(self) -> str:
         payload = {
@@ -148,7 +148,8 @@ class WorkerClient:
 
         start = time.time()
         try:
-            result = self.adapter.run(
+            adapter = get_adapter(algorithm, model_dir=os.environ.get("MODEL_DIR", "."))
+            result = adapter.run(
                 algorithm=algorithm,
                 seed=seed or 0,
                 obs_mode=obs_mode,
