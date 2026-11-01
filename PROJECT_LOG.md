@@ -42,16 +42,25 @@ Commit: `6c356c8 feat: add FastAPI backend, SQLite seed, tests, and Dockerfile` 
   unknown id, /summary matches numbers recomputed independently from results.json
   (never copied from API output).
 
-## Phase E — Docker (written, not deployed)
-- backend/Dockerfile: python:3.12-slim, non-root `aerorl` user, HEALTHCHECK on
-  /health, SQLite DB on /data volume, docker-entrypoint.sh seeds then runs uvicorn.
-- NOT deployed yet: Docker is not installed on this Windows machine; the image
-  must be built on the Oracle Linux server. Blocked on Oracle server SSH
-  details (host, user, port/key) needed to:
-    * run uname -m and build for that architecture,
-    * check what's listening before choosing a port,
-    * add OCI cloud ingress + VM firewall rules for the port (add only, no
-      policy changes, no prune),
-    * ensure the existing Dockerized n8n bot is not disturbed.
+## Phase E — Docker (built on Oracle server; OCI cloud ingress pending)
+- Server: 152.70.40.141, ubuntu, aarch64, Ubuntu 24.04, Docker 29.9.2.
+- Existing containers left untouched: `stack-caddy-1` (80, 443), `stack-n8n-1` (5678 internal).
+- Listening check: 80/443 (caddy), 22 (ssh), 111 (rpcbind) taken; 8000 FREE -> chosen.
+- Image `aerorl-backend:latest` built natively for aarch64 from `backend/Dockerfile`
+  (python:3.12-slim, non-root `aerorl` user, HEALTHCHECK on /health, SQLite on
+  /data volume, entrypoint seeds then runs uvicorn on PORT=8000).
+- VM firewall (iptables, add-only, policy unchanged, no prune):
+  `iptables -I INPUT -p tcp --dport 8000 -j ACCEPT` (rule #1).
+- Container `aerorl-backend` running: `--restart unless-stopped`, `-p 8000:8000`,
+  `-v aerorl_data:/data`, `AERORL_DB_PATH=/data/aerorl.db`. Status: **healthy**.
+  HEALTHCHECK on /health passes. Internal curl http://127.0.0.1:8000/health ->
+  {"status":"ok"}. DB seeded with 12 runs.
+- BLOCKED externally: curl http://152.70.40.141:8000/health times out. The OCI
+  cloud ingress rule (security list / network security group) for tcp port 8000
+  is missing. No `~/.oci` config and instance metadata returns 403, so I cannot
+  add it via CLI — must be added in the OCI Console:
+    Networking -> VCN -> Security Lists (or the instance's NSG) -> add Ingress rule:
+    STATIC, Source CIDR 0.0.0.0/0 (or your IP), IP Protocol TCP, Destination Port 8000, Allow.
 
-Next: get Oracle server SSH access, then build, run, and verify the container.
+Next: user adds the OCI cloud ingress rule for port 8000, then
+curl http://152.70.40.141:8000/health (and /runs, /summary) from outside.
