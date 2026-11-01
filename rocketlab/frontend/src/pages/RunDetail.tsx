@@ -15,17 +15,11 @@ import { AltitudeChart, VelocityChart, FuelChart, TrainingChart } from "@/compon
 import { MetricCard } from "@/components/ui/MetricCard"
 import { Badge } from "@/components/ui/Badge"
 import {
-  ArrowRight,
   RefreshCw,
   X,
-  CheckCircle2,
-  AlertCircle,
   Rocket,
-  Fuel,
-  Target,
   Activity,
   Terminal,
-  LayoutDashboard,
 } from "lucide-react"
 import { useAppStore } from "@/hooks/useAppStore"
 
@@ -64,13 +58,6 @@ export default function RunDetailPage() {
   if (!run) return <div className="text-slate-500 text-sm">Run not found</div>
 
   const m = run.metrics || {}
-  const statusColors: Record<string, string> = {
-    completed: "bg-green-900/30 text-green-400 border border-green-900/50",
-    running: "bg-amber-900/30 text-amber-400 border border-amber-900/50",
-    failed: "bg-red-900/30 text-red-400 border border-red-900/50",
-    queued: "bg-slate-800 text-slate-400 border border-slate-700",
-    cancelled: "bg-slate-900 text-slate-500 border border-slate-800",
-  }
 
   const handleCancel = async () => {
     await cancelRun(id!)
@@ -110,7 +97,7 @@ export default function RunDetailPage() {
       </div>
 
       <div className="flex items-end gap-4 mb-2">
-        <Badge variant="demo">{run.experiment?.is_demo ? "DEMO" : "LIVE"}</Badge>
+        <Badge variant="demo">DEMO</Badge>
         <Badge
           variant={run.status === "completed" ? "success" : run.status === "running" ? "warning" : run.status === "failed" ? "danger" : "info"}
         >
@@ -144,7 +131,7 @@ export default function RunDetailPage() {
             </div>
             <div className="h-[500px]">
               <Trajectory3D
-                points={traj}
+                points={telemetry}
                 landingSuccess={m.landing_success}
                 touchdownVelocity={m.touchdown_velocity_mps}
               />

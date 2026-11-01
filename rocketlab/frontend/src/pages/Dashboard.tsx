@@ -5,18 +5,12 @@ import { MetricCard } from "@/components/ui/MetricCard"
 import { Badge } from "@/components/ui/Badge"
 import { AltitudeChart, VelocityChart, FuelChart, TrainingChart } from "@/components/charts/TelemetryCharts"
 import { Trajectory3D } from "@/components/viewer/Trajectory3D"
-import { ArrowRight, Activity, Target, Rocket } from "lucide-react"
-import { RunRow } from "@/components/ui/RunRow"
-import { useAppStore as useStore } from "@/hooks/useAppStore"
+import { ArrowRight } from "lucide-react"
 
 export default function DashboardPage() {
   const [summary, setSummary] = useState<any>(null)
   const [loading, setLoading] = useState(true)
   const setAppSummary = useAppStore((s) => s.setSummary)
-  const setAppTrajectory = useAppStore((s) => s.setTrajectory)
-  const setAppTraining = useAppStore((s) => s.setTraining)
-  const selectedRunId = useStore((s) => s.selectedRunId)
-  const setSelectedRunId = useStore((s) => s.setSelectedRunId)
 
   useEffect(() => {
     getDashboardSummary()
@@ -40,7 +34,6 @@ export default function DashboardPage() {
   const m = summary || {}
   const recent = (m.recent_runs || []).slice(0, 6)
   const demoRun = recent.find((r: any) => r.metrics?.landing_success === true)
-  const trajPoints = demoRun ? [] : []
 
   return (
     <div className="space-y-6">
@@ -107,7 +100,7 @@ export default function DashboardPage() {
               ) : (
                 <div className="space-y-2">
                   {recent.map((r: any) => (
-                    <div key={r.id} className="flex items-center gap-3 p-2 rounded-lg bg-slate-800/30 cursor-pointer hover:bg-slate-800 transition group" onClick={() => setSelectedRunId(r.id)}>
+                    <div key={r.id} className="flex items-center gap-3 p-2 rounded-lg bg-slate-800/30 hover:bg-slate-800 transition group">
                       <div className="w-2 h-2 rounded-full" style={{ backgroundColor: r.metrics?.landing_success ? "#22c55e" : "#ef4444" }} />
                       <div className="flex-1 min-w-0">
                         <div className="text-sm text-slate-200 truncate">{r.algorithm}</div>

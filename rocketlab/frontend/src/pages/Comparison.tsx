@@ -2,7 +2,7 @@ import { useEffect, useState } from "react"
 import { listRuns } from "@/services/api"
 import { Run } from "@/types"
 import { Trajectory3D } from "@/components/viewer/Trajectory3D"
-import { Activity, Rocket, Target, Fuel, ArrowRight } from "lucide-react"
+import { Activity } from "lucide-react"
 import { Badge } from "@/components/ui/Badge"
 
 export default function ComparisonPage() {
@@ -117,7 +117,7 @@ export default function ComparisonPage() {
             <div className="bg-slate-900/50 border border-slate-800 rounded-xl p-4">
               <h3 className="text-xs font-semibold text-slate-400 mb-3 uppercase tracking-wider">3D Trajectories (Overlay)</h3>
               <div className="h-[400px]">
-                <Trajectory3D points={selectedRuns[0]?.trajectory || []} />
+                <Trajectory3D points={[]} />
               </div>
             </div>
             <div className="space-y-4">
@@ -171,7 +171,7 @@ export default function ComparisonPage() {
             </div>
           </div>
         </div>
-      </div>
+      )}
 
       {runs.length === 0 && (
         <div className="text-center py-20 text-slate-500">

@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react"
+import { useEffect, useRef } from "react"
 import * as THREE from "three"
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls.js"
 
@@ -10,6 +10,7 @@ interface TrajectoryPoint {
   altitude_m: number
   speed_mps: number
   fuel_kg: number
+  throttle: number
 }
 
 interface Trajectory3DProps {
@@ -18,9 +19,8 @@ interface Trajectory3DProps {
   touchdownVelocity?: number | null
 }
 
-export function Trajectory3D({ points, landingSuccess, touchdownVelocity }: Trajectory3DProps) {
+export function Trajectory3D({ points, landingSuccess: _landingSuccess, touchdownVelocity: _touchdownVelocity }: Trajectory3DProps) {
   const containerRef = useRef<HTMLDivElement>(null)
-  const [hoverInfo, setHoverInfo] = useState<{ t: number; alt: number; speed: number; fuel: number } | null>(null)
 
   useEffect(() => {
     if (!containerRef.current) return
@@ -29,11 +29,11 @@ export function Trajectory3D({ points, landingSuccess, touchdownVelocity }: Traj
     scene.background = new THREE.Color(0x020617)
     scene.fog = new THREE.FogExp2(0x020617, 0.02)
 
-    const camera = new THREE.PerspectiveCamera(60, containerRef.clientWidth / containerRef.clientHeight, 0.1, 2000)
+    const camera = new THREE.PerspectiveCamera(60, containerRef.current!.clientWidth / containerRef.current!.clientHeight, 0.1, 2000)
     camera.position.set(120, 120, 120)
 
     const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true })
-    renderer.setSize(containerRef.clientWidth, containerRef.clientHeight)
+    renderer.setSize(containerRef.current!.clientWidth, containerRef.current!.clientHeight)
     renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2))
     containerRef.current.appendChild(renderer.domElement)
 
@@ -124,9 +124,6 @@ export function Trajectory3D({ points, landingSuccess, touchdownVelocity }: Traj
       let frame = 0
       const total = points.length
       let playing = true
-      let rocketY = trajectoryPts[0].y
-      let rocketX = trajectoryPts[0].x
-      let rocketZ = trajectoryPts[0].z
 
       const ambientLight = new THREE.AmbientLight(0xffffff, 0.3)
       scene.add(ambientLight)
@@ -149,13 +146,6 @@ export function Trajectory3D({ points, landingSuccess, touchdownVelocity }: Traj
           )
           flame.scale.y = pt.throttle > 0 ? 1 : 0.1
           flame.material.color = pt.throttle > 0 ? new THREE.Color(0xfbbf24) : new THREE.Color(0x334155)
-
-          setHoverInfo({
-            t: pt.t_s,
-            alt: pt.altitude_m,
-            speed: pt.speed_mps,
-            fuel: pt.fuel_kg,
-          })
         }
 
         renderer.render(scene, camera)

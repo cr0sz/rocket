@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react"
 import { listWorkers, registerWorker } from "@/services/api"
 import { Worker } from "@/types"
-import { Users, Rocket, Monitor, Activity } from "lucide-react"
+import { Users, Rocket, Monitor } from "lucide-react"
 
 export default function WorkersPage() {
   const [workers, setWorkers] = useState<Worker[]>([])

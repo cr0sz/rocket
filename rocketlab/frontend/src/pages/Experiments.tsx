@@ -1,10 +1,9 @@
 import { useEffect, useState } from "react"
-import { listExperiments, createExperiment, listExperimentRuns } from "@/services/api"
+import { listExperiments, createExperiment } from "@/services/api"
 import { useAppStore } from "@/hooks/useAppStore"
 import { Experiment } from "@/types"
 import { Rocket, Plus, ArrowRight } from "lucide-react"
 import { Badge } from "@/components/ui/Badge"
-import { RunRow } from "@/components/ui/RunRow"
 
 const ALGORITHMS = [
   { value: "ppo_extended", label: "PPO (Extended)", obs: "extended" },

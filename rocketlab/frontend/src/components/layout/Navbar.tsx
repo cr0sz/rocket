@@ -1,6 +1,5 @@
-import { Bell, HelpCircle, Sun, Moon } from "lucide-react"
+import { Bell, HelpCircle, Sun, Moon, Menu } from "lucide-react"
 import { useAppStore } from "@/hooks/useAppStore"
-import { Menu } from "lucide-react"
 
 export function Navbar() {
   const { theme, setTheme, sidebarOpen, setSidebarOpen } = useAppStore()
@@ -36,5 +35,5 @@ export function Navbar() {
         </button>
       </div>
     </header>
-  </div>
-)
+  )
+}

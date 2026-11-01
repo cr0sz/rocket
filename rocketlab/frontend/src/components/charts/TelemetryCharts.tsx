@@ -7,7 +7,6 @@ import {
   CartesianGrid,
   Tooltip,
   Legend,
-  ResponsiveContainer as RC,
 } from "recharts"
 
 export function AltitudeChart({ data }: { data: { t_s: number; altitude_m: number }[] }) {
@@ -17,7 +16,7 @@ export function AltitudeChart({ data }: { data: { t_s: number; altitude_m: numbe
   return (
     <div className="bg-slate-900/40 border border-slate-800 rounded-xl p-4">
       <h3 className="text-xs font-semibold text-slate-400 mb-3 uppercase tracking-wider">Altitude vs Time</h3>
-      <RC width="100%" height={260}>
+      <ResponsiveContainer width="100%" height={260}>
         <LineChart data={data} margin={{ top: 20, right: 20, bottom: 20, left: 0 }}>
           <CartesianGrid strokeDasharray="3 3" stroke="#1e293b" />
           <XAxis dataKey="t_s" tick={{ fontSize: 10, fill: "#64748b" }} axisLine={false} tickMargin={8} />
@@ -36,7 +35,7 @@ export function AltitudeChart({ data }: { data: { t_s: number; altitude_m: numbe
             activeDot={{ r: 4, fill: "#3b82f6" }}
           />
         </LineChart>
-      </RC>
+      </ResponsiveContainer>
       <div className="mt-2 flex items-center gap-2">
         <span className="w-3 h-3 rounded-full bg-rocket-500" />
         <span className="text-xs text-slate-400">Altitude (m)</span>
@@ -52,7 +51,7 @@ export function VelocityChart({ data }: { data: { t_s: number; speed_mps: number
   return (
     <div className="bg-slate-900/40 border border-slate-800 rounded-xl p-4">
       <h3 className="text-xs font-semibold text-slate-400 mb-3 uppercase tracking-wider">Velocity vs Time</h3>
-      <RC width="100%" height={260}>
+      <ResponsiveContainer width="100%" height={260}>
         <LineChart data={data} margin={{ top: 20, right: 20, bottom: 20, left: 0 }}>
           <CartesianGrid strokeDasharray="3 3" stroke="#1e293b" />
           <XAxis dataKey="t_s" tick={{ fontSize: 10, fill: "#64748b" }} axisLine={false} tickMargin={8} />
@@ -60,7 +59,7 @@ export function VelocityChart({ data }: { data: { t_s: number; speed_mps: number
           <Tooltip contentStyle={{ backgroundColor: "#0f172a", border: "1px solid #334155", color: "#f8fafc" }} />
           <Line type="monotone" dataKey="speed_mps" stroke="#22c55e" strokeWidth={2} dot={false} />
         </LineChart>
-      </RC>
+      </ResponsiveContainer>
       <div className="mt-2 flex items-center gap-2">
         <span className="w-3 h-3 rounded-full bg-green-500" />
         <span className="text-xs text-slate-400">Speed (m/s)</span>
@@ -76,7 +75,7 @@ export function FuelChart({ data }: { data: { t_s: number; fuel_kg: number }[] }
   return (
     <div className="bg-slate-900/40 border border-slate-800 rounded-xl p-4">
       <h3 className="text-xs font-semibold text-slate-400 mb-3 uppercase tracking-wider">Fuel vs Time</h3>
-      <RC width="100%" height={260}>
+      <ResponsiveContainer width="100%" height={260}>
         <LineChart data={data} margin={{ top: 20, right: 20, bottom: 20, left: 0 }}>
           <CartesianGrid strokeDasharray="3 3" stroke="#1e293b" />
           <XAxis dataKey="t_s" tick={{ fontSize: 10, fill: "#64748b" }} axisLine={false} tickMargin={8} />
@@ -84,7 +83,7 @@ export function FuelChart({ data }: { data: { t_s: number; fuel_kg: number }[] }
           <Tooltip contentStyle={{ backgroundColor: "#0f172a", border: "1px solid #334155", color: "#f8fafc" }} />
           <Line type="monotone" dataKey="fuel_kg" stroke="#f59e0b" strokeWidth={2} dot={false} fill="#f59e0b" fillOpacity={0.1} />
         </LineChart>
-      </RC>
+      </ResponsiveContainer>
       <div className="mt-2 flex items-center gap-2">
         <span className="w-3 h-3 rounded-full bg-amber-500" />
         <span className="text-xs text-slate-400">Fuel (kg)</span>
@@ -100,7 +99,7 @@ export function TrainingChart({ data }: { data: { episode: number; reward: numbe
   return (
     <div className="bg-slate-900/40 border border-slate-800 rounded-xl p-4">
       <h3 className="text-xs font-semibold text-slate-400 mb-3 uppercase tracking-wider">Training Reward vs Episode</h3>
-      <RC width="100%" height={260}>
+      <ResponsiveContainer width="100%" height={260}>
         <LineChart data={data} margin={{ top: 20, right: 20, bottom: 20, left: 0 }}>
           <CartesianGrid strokeDasharray="3 3" stroke="#1e293b" />
           <XAxis dataKey="episode" tick={{ fontSize: 10, fill: "#64748b" }} axisLine={false} tickMargin={8} />
@@ -111,7 +110,7 @@ export function TrainingChart({ data }: { data: { episode: number; reward: numbe
             <Line type="monotone" dataKey="avg_reward" stroke="#818cf8" strokeWidth={2} strokeDasharray="4 4" dot={false} />
           )}
         </LineChart>
-      </RC>
+      </ResponsiveContainer>
     </div>
   )
 }
