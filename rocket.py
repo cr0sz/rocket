@@ -1,4 +1,3 @@
-#fucking rocket will fly at the end of this shit
 import random
 
 gravity = 9.8

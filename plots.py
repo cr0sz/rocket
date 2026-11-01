@@ -1,25 +1,48 @@
 # plots.py - makes the pictures for your report.   Run:  python plots.py
 # Needs matplotlib:   pip install matplotlib
+import json
 import os
 import matplotlib
 matplotlib.use("Agg")                      # draw to files, no window needed
 import matplotlib.pyplot as plt
 
-# ------------------------------------------------------------------
-# 1) YOUR NUMBERS. Update ext_seeds after you evaluate seeds 3 and 4.
-# ------------------------------------------------------------------
-random_rate = 0.1
-hand_rule = 44.18
-ceiling = 74.2
-basic_seeds = [55.3, 55.7, 55.7, 52.65, 55.7]
-ext_seeds = [64.55, 66.75, 66.75]          # add the seed 3 and seed 4 results here
+RESULTS_FILE = "results.json"
 
-# per start-altitude band, from analysis.py on seed 0 (4000 games)
-bands = ["400-420", "420-440", "440-460", "460-480", "480-500",
-         "500-520", "520-540", "540-560", "560-580", "580-600"]
-basic_by_band = [66.3, 65.8, 69.9, 81.1, 65.6, 45.9, 45.9, 44.6, 48.5, 19.6]
-ext_by_band = [87.3, 66.1, 64.5, 78.4, 65.6, 45.9, 65.2, 64.5, 48.5, 63.3]
-best_by_band = [88.0, 88.0, 88.0, 88.0, 65.0, 65.0, 65.0, 65.0, 65.0, 65.0]
+# ------------------------------------------------------------------
+# 1) YOUR NUMBERS. Read from results.json (written by evaluate.py).
+#    ceiling and best_by_band are theoretical (from ceiling.py),
+#    not evaluation results, so they stay as constants.
+# ------------------------------------------------------------------
+with open(RESULTS_FILE) as f:
+    _data = json.load(f)
+
+
+def _find(controller, obs_mode=None, seed=None):
+    for r in _data:
+        if r["controller"] != controller:
+            continue
+        if obs_mode is not None and r["obs_mode"] != obs_mode:
+            continue
+        if seed is not None and r["seed"] != seed:
+            continue
+        return r
+
+
+def _rate(controller, obs_mode=None, seed=None):
+    r = _find(controller, obs_mode, seed)
+    return r["landings"] / r["games"] * 100
+
+
+random_rate = _rate("random")
+hand_rule = _rate("hand_rule")
+ceiling = 74.2                                 # theoretical, from ceiling.py
+basic_seeds = [_rate("ppo", "basic", s) for s in range(5)]
+ext_seeds = [_rate("ppo", "extended", s) for s in range(5)]
+
+bands = [f"{b['alt_min']}-{b['alt_max']}" for b in _find("ppo", "extended", 0)["bands"]]
+basic_by_band = [b["landings"] / b["games"] * 100 for b in _find("ppo", "basic", 0)["bands"]]
+ext_by_band = [b["landings"] / b["games"] * 100 for b in _find("ppo", "extended", 0)["bands"]]
+best_by_band = [88.0, 88.0, 88.0, 88.0, 65.0, 65.0, 65.0, 65.0, 65.0, 65.0]  # theoretical
 
 
 def average(values):
