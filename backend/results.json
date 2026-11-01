@@ -1,0 +1,842 @@
+[
+  {
+    "controller": "ppo",
+    "obs_mode": "extended",
+    "seed": 0,
+    "eval_seed": 123,
+    "games": 2000,
+    "landings": 1291,
+    "bands": [
+      {
+        "alt_min": 400,
+        "alt_max": 420,
+        "games": 185,
+        "landings": 168
+      },
+      {
+        "alt_min": 420,
+        "alt_max": 440,
+        "games": 204,
+        "landings": 131
+      },
+      {
+        "alt_min": 440,
+        "alt_max": 460,
+        "games": 228,
+        "landings": 136
+      },
+      {
+        "alt_min": 460,
+        "alt_max": 480,
+        "games": 194,
+        "landings": 153
+      },
+      {
+        "alt_min": 480,
+        "alt_max": 500,
+        "games": 212,
+        "landings": 143
+      },
+      {
+        "alt_min": 500,
+        "alt_max": 520,
+        "games": 206,
+        "landings": 95
+      },
+      {
+        "alt_min": 520,
+        "alt_max": 540,
+        "games": 195,
+        "landings": 121
+      },
+      {
+        "alt_min": 540,
+        "alt_max": 560,
+        "games": 200,
+        "landings": 131
+      },
+      {
+        "alt_min": 560,
+        "alt_max": 580,
+        "games": 178,
+        "landings": 85
+      },
+      {
+        "alt_min": 580,
+        "alt_max": 600,
+        "games": 198,
+        "landings": 128
+      }
+    ]
+  },
+  {
+    "controller": "ppo",
+    "obs_mode": "extended",
+    "seed": 1,
+    "eval_seed": 123,
+    "games": 2000,
+    "landings": 1335,
+    "bands": [
+      {
+        "alt_min": 400,
+        "alt_max": 420,
+        "games": 185,
+        "landings": 168
+      },
+      {
+        "alt_min": 420,
+        "alt_max": 440,
+        "games": 204,
+        "landings": 175
+      },
+      {
+        "alt_min": 440,
+        "alt_max": 460,
+        "games": 228,
+        "landings": 136
+      },
+      {
+        "alt_min": 460,
+        "alt_max": 480,
+        "games": 194,
+        "landings": 153
+      },
+      {
+        "alt_min": 480,
+        "alt_max": 500,
+        "games": 212,
+        "landings": 143
+      },
+      {
+        "alt_min": 500,
+        "alt_max": 520,
+        "games": 206,
+        "landings": 95
+      },
+      {
+        "alt_min": 520,
+        "alt_max": 540,
+        "games": 195,
+        "landings": 121
+      },
+      {
+        "alt_min": 540,
+        "alt_max": 560,
+        "games": 200,
+        "landings": 131
+      },
+      {
+        "alt_min": 560,
+        "alt_max": 580,
+        "games": 178,
+        "landings": 85
+      },
+      {
+        "alt_min": 580,
+        "alt_max": 600,
+        "games": 198,
+        "landings": 128
+      }
+    ]
+  },
+  {
+    "controller": "ppo",
+    "obs_mode": "extended",
+    "seed": 2,
+    "eval_seed": 123,
+    "games": 2000,
+    "landings": 1335,
+    "bands": [
+      {
+        "alt_min": 400,
+        "alt_max": 420,
+        "games": 185,
+        "landings": 168
+      },
+      {
+        "alt_min": 420,
+        "alt_max": 440,
+        "games": 204,
+        "landings": 175
+      },
+      {
+        "alt_min": 440,
+        "alt_max": 460,
+        "games": 228,
+        "landings": 136
+      },
+      {
+        "alt_min": 460,
+        "alt_max": 480,
+        "games": 194,
+        "landings": 153
+      },
+      {
+        "alt_min": 480,
+        "alt_max": 500,
+        "games": 212,
+        "landings": 143
+      },
+      {
+        "alt_min": 500,
+        "alt_max": 520,
+        "games": 206,
+        "landings": 95
+      },
+      {
+        "alt_min": 520,
+        "alt_max": 540,
+        "games": 195,
+        "landings": 121
+      },
+      {
+        "alt_min": 540,
+        "alt_max": 560,
+        "games": 200,
+        "landings": 131
+      },
+      {
+        "alt_min": 560,
+        "alt_max": 580,
+        "games": 178,
+        "landings": 85
+      },
+      {
+        "alt_min": 580,
+        "alt_max": 600,
+        "games": 198,
+        "landings": 128
+      }
+    ]
+  },
+  {
+    "controller": "ppo",
+    "obs_mode": "extended",
+    "seed": 3,
+    "eval_seed": 123,
+    "games": 2000,
+    "landings": 1325,
+    "bands": [
+      {
+        "alt_min": 400,
+        "alt_max": 420,
+        "games": 185,
+        "landings": 168
+      },
+      {
+        "alt_min": 420,
+        "alt_max": 440,
+        "games": 204,
+        "landings": 165
+      },
+      {
+        "alt_min": 440,
+        "alt_max": 460,
+        "games": 228,
+        "landings": 136
+      },
+      {
+        "alt_min": 460,
+        "alt_max": 480,
+        "games": 194,
+        "landings": 153
+      },
+      {
+        "alt_min": 480,
+        "alt_max": 500,
+        "games": 212,
+        "landings": 143
+      },
+      {
+        "alt_min": 500,
+        "alt_max": 520,
+        "games": 206,
+        "landings": 95
+      },
+      {
+        "alt_min": 520,
+        "alt_max": 540,
+        "games": 195,
+        "landings": 121
+      },
+      {
+        "alt_min": 540,
+        "alt_max": 560,
+        "games": 200,
+        "landings": 131
+      },
+      {
+        "alt_min": 560,
+        "alt_max": 580,
+        "games": 178,
+        "landings": 85
+      },
+      {
+        "alt_min": 580,
+        "alt_max": 600,
+        "games": 198,
+        "landings": 128
+      }
+    ]
+  },
+  {
+    "controller": "ppo",
+    "obs_mode": "extended",
+    "seed": 4,
+    "eval_seed": 123,
+    "games": 2000,
+    "landings": 1335,
+    "bands": [
+      {
+        "alt_min": 400,
+        "alt_max": 420,
+        "games": 185,
+        "landings": 168
+      },
+      {
+        "alt_min": 420,
+        "alt_max": 440,
+        "games": 204,
+        "landings": 175
+      },
+      {
+        "alt_min": 440,
+        "alt_max": 460,
+        "games": 228,
+        "landings": 136
+      },
+      {
+        "alt_min": 460,
+        "alt_max": 480,
+        "games": 194,
+        "landings": 153
+      },
+      {
+        "alt_min": 480,
+        "alt_max": 500,
+        "games": 212,
+        "landings": 143
+      },
+      {
+        "alt_min": 500,
+        "alt_max": 520,
+        "games": 206,
+        "landings": 95
+      },
+      {
+        "alt_min": 520,
+        "alt_max": 540,
+        "games": 195,
+        "landings": 121
+      },
+      {
+        "alt_min": 540,
+        "alt_max": 560,
+        "games": 200,
+        "landings": 131
+      },
+      {
+        "alt_min": 560,
+        "alt_max": 580,
+        "games": 178,
+        "landings": 85
+      },
+      {
+        "alt_min": 580,
+        "alt_max": 600,
+        "games": 198,
+        "landings": 128
+      }
+    ]
+  },
+  {
+    "controller": "ppo",
+    "obs_mode": "basic",
+    "seed": 0,
+    "eval_seed": 123,
+    "games": 2000,
+    "landings": 1106,
+    "bands": [
+      {
+        "alt_min": 400,
+        "alt_max": 420,
+        "games": 185,
+        "landings": 121
+      },
+      {
+        "alt_min": 420,
+        "alt_max": 440,
+        "games": 204,
+        "landings": 127
+      },
+      {
+        "alt_min": 440,
+        "alt_max": 460,
+        "games": 228,
+        "landings": 149
+      },
+      {
+        "alt_min": 460,
+        "alt_max": 480,
+        "games": 194,
+        "landings": 161
+      },
+      {
+        "alt_min": 480,
+        "alt_max": 500,
+        "games": 212,
+        "landings": 143
+      },
+      {
+        "alt_min": 500,
+        "alt_max": 520,
+        "games": 206,
+        "landings": 95
+      },
+      {
+        "alt_min": 520,
+        "alt_max": 540,
+        "games": 195,
+        "landings": 90
+      },
+      {
+        "alt_min": 540,
+        "alt_max": 560,
+        "games": 200,
+        "landings": 96
+      },
+      {
+        "alt_min": 560,
+        "alt_max": 580,
+        "games": 178,
+        "landings": 85
+      },
+      {
+        "alt_min": 580,
+        "alt_max": 600,
+        "games": 198,
+        "landings": 39
+      }
+    ]
+  },
+  {
+    "controller": "ppo",
+    "obs_mode": "basic",
+    "seed": 1,
+    "eval_seed": 123,
+    "games": 2000,
+    "landings": 1114,
+    "bands": [
+      {
+        "alt_min": 400,
+        "alt_max": 420,
+        "games": 185,
+        "landings": 121
+      },
+      {
+        "alt_min": 420,
+        "alt_max": 440,
+        "games": 204,
+        "landings": 127
+      },
+      {
+        "alt_min": 440,
+        "alt_max": 460,
+        "games": 228,
+        "landings": 149
+      },
+      {
+        "alt_min": 460,
+        "alt_max": 480,
+        "games": 194,
+        "landings": 123
+      },
+      {
+        "alt_min": 480,
+        "alt_max": 500,
+        "games": 212,
+        "landings": 143
+      },
+      {
+        "alt_min": 500,
+        "alt_max": 520,
+        "games": 206,
+        "landings": 95
+      },
+      {
+        "alt_min": 520,
+        "alt_max": 540,
+        "games": 195,
+        "landings": 90
+      },
+      {
+        "alt_min": 540,
+        "alt_max": 560,
+        "games": 200,
+        "landings": 96
+      },
+      {
+        "alt_min": 560,
+        "alt_max": 580,
+        "games": 178,
+        "landings": 85
+      },
+      {
+        "alt_min": 580,
+        "alt_max": 600,
+        "games": 198,
+        "landings": 85
+      }
+    ]
+  },
+  {
+    "controller": "ppo",
+    "obs_mode": "basic",
+    "seed": 2,
+    "eval_seed": 123,
+    "games": 2000,
+    "landings": 1114,
+    "bands": [
+      {
+        "alt_min": 400,
+        "alt_max": 420,
+        "games": 185,
+        "landings": 121
+      },
+      {
+        "alt_min": 420,
+        "alt_max": 440,
+        "games": 204,
+        "landings": 127
+      },
+      {
+        "alt_min": 440,
+        "alt_max": 460,
+        "games": 228,
+        "landings": 149
+      },
+      {
+        "alt_min": 460,
+        "alt_max": 480,
+        "games": 194,
+        "landings": 123
+      },
+      {
+        "alt_min": 480,
+        "alt_max": 500,
+        "games": 212,
+        "landings": 143
+      },
+      {
+        "alt_min": 500,
+        "alt_max": 520,
+        "games": 206,
+        "landings": 95
+      },
+      {
+        "alt_min": 520,
+        "alt_max": 540,
+        "games": 195,
+        "landings": 90
+      },
+      {
+        "alt_min": 540,
+        "alt_max": 560,
+        "games": 200,
+        "landings": 96
+      },
+      {
+        "alt_min": 560,
+        "alt_max": 580,
+        "games": 178,
+        "landings": 85
+      },
+      {
+        "alt_min": 580,
+        "alt_max": 600,
+        "games": 198,
+        "landings": 85
+      }
+    ]
+  },
+  {
+    "controller": "ppo",
+    "obs_mode": "basic",
+    "seed": 3,
+    "eval_seed": 123,
+    "games": 2000,
+    "landings": 1053,
+    "bands": [
+      {
+        "alt_min": 400,
+        "alt_max": 420,
+        "games": 185,
+        "landings": 121
+      },
+      {
+        "alt_min": 420,
+        "alt_max": 440,
+        "games": 204,
+        "landings": 127
+      },
+      {
+        "alt_min": 440,
+        "alt_max": 460,
+        "games": 228,
+        "landings": 149
+      },
+      {
+        "alt_min": 460,
+        "alt_max": 480,
+        "games": 194,
+        "landings": 134
+      },
+      {
+        "alt_min": 480,
+        "alt_max": 500,
+        "games": 212,
+        "landings": 143
+      },
+      {
+        "alt_min": 500,
+        "alt_max": 520,
+        "games": 206,
+        "landings": 95
+      },
+      {
+        "alt_min": 520,
+        "alt_max": 540,
+        "games": 195,
+        "landings": 90
+      },
+      {
+        "alt_min": 540,
+        "alt_max": 560,
+        "games": 200,
+        "landings": 96
+      },
+      {
+        "alt_min": 560,
+        "alt_max": 580,
+        "games": 178,
+        "landings": 85
+      },
+      {
+        "alt_min": 580,
+        "alt_max": 600,
+        "games": 198,
+        "landings": 13
+      }
+    ]
+  },
+  {
+    "controller": "ppo",
+    "obs_mode": "basic",
+    "seed": 4,
+    "eval_seed": 123,
+    "games": 2000,
+    "landings": 1114,
+    "bands": [
+      {
+        "alt_min": 400,
+        "alt_max": 420,
+        "games": 185,
+        "landings": 121
+      },
+      {
+        "alt_min": 420,
+        "alt_max": 440,
+        "games": 204,
+        "landings": 127
+      },
+      {
+        "alt_min": 440,
+        "alt_max": 460,
+        "games": 228,
+        "landings": 149
+      },
+      {
+        "alt_min": 460,
+        "alt_max": 480,
+        "games": 194,
+        "landings": 123
+      },
+      {
+        "alt_min": 480,
+        "alt_max": 500,
+        "games": 212,
+        "landings": 143
+      },
+      {
+        "alt_min": 500,
+        "alt_max": 520,
+        "games": 206,
+        "landings": 95
+      },
+      {
+        "alt_min": 520,
+        "alt_max": 540,
+        "games": 195,
+        "landings": 90
+      },
+      {
+        "alt_min": 540,
+        "alt_max": 560,
+        "games": 200,
+        "landings": 96
+      },
+      {
+        "alt_min": 560,
+        "alt_max": 580,
+        "games": 178,
+        "landings": 85
+      },
+      {
+        "alt_min": 580,
+        "alt_max": 600,
+        "games": 198,
+        "landings": 85
+      }
+    ]
+  },
+  {
+    "controller": "hand_rule",
+    "obs_mode": null,
+    "seed": null,
+    "eval_seed": 123,
+    "games": 2000,
+    "landings": 875,
+    "bands": [
+      {
+        "alt_min": 400,
+        "alt_max": 420,
+        "games": 185,
+        "landings": 121
+      },
+      {
+        "alt_min": 420,
+        "alt_max": 440,
+        "games": 204,
+        "landings": 82
+      },
+      {
+        "alt_min": 440,
+        "alt_max": 460,
+        "games": 228,
+        "landings": 105
+      },
+      {
+        "alt_min": 460,
+        "alt_max": 480,
+        "games": 194,
+        "landings": 88
+      },
+      {
+        "alt_min": 480,
+        "alt_max": 500,
+        "games": 212,
+        "landings": 143
+      },
+      {
+        "alt_min": 500,
+        "alt_max": 520,
+        "games": 206,
+        "landings": 95
+      },
+      {
+        "alt_min": 520,
+        "alt_max": 540,
+        "games": 195,
+        "landings": 90
+      },
+      {
+        "alt_min": 540,
+        "alt_max": 560,
+        "games": 200,
+        "landings": 63
+      },
+      {
+        "alt_min": 560,
+        "alt_max": 580,
+        "games": 178,
+        "landings": 57
+      },
+      {
+        "alt_min": 580,
+        "alt_max": 600,
+        "games": 198,
+        "landings": 31
+      }
+    ]
+  },
+  {
+    "controller": "random",
+    "obs_mode": null,
+    "seed": 123,
+    "eval_seed": 123,
+    "games": 2000,
+    "landings": 1,
+    "bands": [
+      {
+        "alt_min": 400,
+        "alt_max": 420,
+        "games": 185,
+        "landings": 1
+      },
+      {
+        "alt_min": 420,
+        "alt_max": 440,
+        "games": 204,
+        "landings": 0
+      },
+      {
+        "alt_min": 440,
+        "alt_max": 460,
+        "games": 228,
+        "landings": 0
+      },
+      {
+        "alt_min": 460,
+        "alt_max": 480,
+        "games": 194,
+        "landings": 0
+      },
+      {
+        "alt_min": 480,
+        "alt_max": 500,
+        "games": 212,
+        "landings": 0
+      },
+      {
+        "alt_min": 500,
+        "alt_max": 520,
+        "games": 206,
+        "landings": 0
+      },
+      {
+        "alt_min": 520,
+        "alt_max": 540,
+        "games": 195,
+        "landings": 0
+      },
+      {
+        "alt_min": 540,
+        "alt_max": 560,
+        "games": 200,
+        "landings": 0
+      },
+      {
+        "alt_min": 560,
+        "alt_max": 580,
+        "games": 178,
+        "landings": 0
+      },
+      {
+        "alt_min": 580,
+        "alt_max": 600,
+        "games": 198,
+        "landings": 0
+      }
+    ]
+  }
+]
