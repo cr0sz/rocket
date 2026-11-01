@@ -21,7 +21,6 @@ import {
   Activity,
   Terminal,
 } from "lucide-react"
-import { useAppStore } from "@/hooks/useAppStore"
 
 export default function RunDetailPage() {
   const { id } = useParams<{ id: string }>()
@@ -30,15 +29,13 @@ export default function RunDetailPage() {
   const [training, setTraining] = useState<any[]>([])
   const [logs, setLogs] = useState<any[]>([])
   const [loading, setLoading] = useState(true)
-  const setTrajectory = useAppStore((s) => s.setTrajectory)
-  const setTrainingStore = useAppStore((s) => s.setTraining)
 
   useEffect(() => {
     load()
   }, [id])
 
   async function load() {
-    const [r, t, traj, tr, lg] = await Promise.all([
+    const [r, t, , tr, lg] = await Promise.all([
       getRun(id!),
       getTelemetry(id!, { limit: 5000 }),
       getTrajectory(id!),
@@ -47,9 +44,7 @@ export default function RunDetailPage() {
     ])
     setRun(r.data)
     setTelemetry(t.data)
-    setTrajectory(traj.data.points)
     setTraining(tr.data)
-    setTrainingStore(tr.data)
     setLogs(lg.data.reverse())
     setLoading(false)
   }
@@ -73,7 +68,7 @@ export default function RunDetailPage() {
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-bold text-white">Run {run.id.slice(0, 8)}</h1>
+          <h1 className="text-2xl font-bold text-white tracking-tight">Run {run.id.slice(0, 8)}</h1>
           <p className="text-slate-400 text-sm">{run.algorithm} · {run.obs_mode || "n/a"} obs · seed {run.seed ?? "—"}</p>
         </div>
         <div className="flex items-center gap-2">
@@ -110,7 +105,7 @@ export default function RunDetailPage() {
       </div>
 
       {/* Overview metrics */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-6 gap-4">
         <MetricCard title="Result" value={m.landing_success ? "Landed" : "Crashed"} sub={run.status} trend={m.landing_success ? "safe" : "unsafe"} />
         <MetricCard title="Touchdown Velocity" value={m.touchdown_velocity_mps?.toFixed?.(1) ?? "—"} sub="m/s" />
         <MetricCard title="Horizontal Error" value={m.horizontal_error_m?.toFixed?.(1) ?? "—"} sub="m" />
@@ -122,14 +117,14 @@ export default function RunDetailPage() {
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {/* 3D Viewer */}
         <div className="lg:col-span-2">
-          <div className="bg-slate-900/50 border border-slate-800 rounded-xl p-4">
-            <div className="flex items-center justify-between mb-4">
-              <h2 className="text-sm font-semibold text-slate-200">
-                <Rocket size={16} className="mr-2" /> Flight Trajectory (3D)
+          <div className="bg-[#0e1524] border border-slate-800 rounded-xl p-0 overflow-hidden">
+            <div className="px-4 py-3 border-b border-slate-800 flex items-center justify-between">
+              <h2 className="text-sm font-semibold text-slate-200 flex items-center gap-2">
+                <Rocket size={16} className="mr-2 text-rocket-500" /> Flight Trajectory (3D)
               </h2>
               <span className="text-xs text-slate-500">{telemetry.length} telemetry points</span>
             </div>
-            <div className="h-[500px]">
+            <div className="h-[520px]">
               <Trajectory3D
                 points={telemetry}
                 landingSuccess={m.landing_success}
@@ -156,7 +151,7 @@ export default function RunDetailPage() {
           {training.length > 0 ? (
             <TrainingChart data={training} />
           ) : (
-            <div className="bg-slate-900/40 border border-slate-800 rounded-xl p-4 h-[260px] flex items-center justify-center text-slate-500 text-sm">
+            <div className="bg-[#0e1524]/50 border border-slate-800 rounded-xl p-4 h-[260px] flex items-center justify-center text-slate-500 text-sm">
               No training data (non-RL run)
             </div>
           )}
@@ -164,7 +159,7 @@ export default function RunDetailPage() {
       </div>
 
       {/* Logs */}
-      <div className="bg-slate-900/50 border border-slate-800 rounded-xl">
+      <div className="bg-[#0e1524]/50 border border-slate-800 rounded-xl">
         <div className="flex items-center justify-between px-4 py-3 border-b border-slate-800">
           <h2 className="text-sm font-semibold text-slate-200 flex items-center gap-2">
             <Terminal size={16} /> Worker Logs
@@ -179,8 +174,7 @@ export default function RunDetailPage() {
               <div key={log.id} className="flex gap-2 mb-1">
                 <span className="text-slate-600 w-16">{new Date(log.t_s).toLocaleTimeString()}</span>
                 <span
-                  className={`text-xs ${log.level === "error" ? "text-red-400" : log.level === "warn" ? "text-amber-400" : "text-slate-300"}`}
-                >
+                  className={`text-xs ${log.level === "error" ? "text-red-400" : log.level === "warn" ? "text-amber-400" : "text-slate-300"}`}>
                   [{log.level.toUpperCase()}]
                 </span>
                 <span className="text-slate-400">{log.message}</span>

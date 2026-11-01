@@ -38,7 +38,7 @@ export default function ComparisonPage() {
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-bold text-white">Experiment Comparison</h1>
+          <h1 className="text-2xl font-bold text-white tracking-tight">Experiment Comparison</h1>
           <p className="text-slate-400 text-sm">
             Select up to 3 runs to compare trajectories and metrics
           </p>
@@ -53,7 +53,7 @@ export default function ComparisonPage() {
         )}
       </div>
 
-      <div className="border border-slate-800 rounded-xl bg-slate-900/40 p-4 overflow-x-auto">
+      <div className="border border-slate-800 rounded-xl bg-[#0e1524]/50 p-4 overflow-x-auto">
         <table className="w-full text-left border-collapse">
           <thead>
             <tr className="border-b border-slate-800">
@@ -114,7 +114,7 @@ export default function ComparisonPage() {
             <Activity size={16} /> Selected Runs Comparison
           </h2>
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-            <div className="bg-slate-900/50 border border-slate-800 rounded-xl p-4">
+            <div className="bg-[#0e1524]/50 border border-slate-800 rounded-xl p-4">
               <h3 className="text-xs font-semibold text-slate-400 mb-3 uppercase tracking-wider">3D Trajectories (Overlay)</h3>
               <div className="h-[400px]">
                 <Trajectory3D points={[]} />
