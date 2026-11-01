@@ -84,7 +84,18 @@ curl http://152.70.40.141:8000/health (and /runs, /summary) from outside.
 - Existing n8n block (crossn8n.duckdns.org -> n8n:5678) untouched.
 
 ## Phase F (optional) — README + GitHub Actions
-- Not done yet: README with curl examples + GitHub Actions workflow running
-  pytest in backend/.
+- README written (rocketlab/README.md) — honest about MVP status, stack, quick start, limitations.
+- GitHub Actions not added (deferred).
 
-Next: none required. The API is live on HTTPS at crossrocket.duckdns.org.
+## RocketLab (new project, separate from AeroRocket)
+- Built distributed rocket simulation & experiment platform: FastAPI backend + SQLAlchemy 2 + PostgreSQL, React + TypeScript + Vite + Tailwind + Three.js + Recharts frontend, Python worker.
+- Backend (commit 75af699): experiments, runs (CRUD + cancel/retry), telemetry, training, logs, workers (register/heartbeat/claim/results/fail), dashboard summary. 12 pytest pass.
+- Frontend (commit 7419dfb + 9dd8e18): dark mission-control dashboard, 3D Three.js trajectory viewer with animated rocket, Recharts telemetry charts, run detail page, multi-run comparison (overlay trajectories + multi-line charts), experiment management, worker management.
+- Worker (commit 9dd8e18): DemoSimulationAdapter + AeroRocketAdapter (real rocket_env.py/rocket.py integration with model fallback), adapter_registry selects best adapter per algorithm.
+- Deployment (commit 9dd8e18): Docker Compose (postgres + backend + frontend), python:3.12-slim ARM64, non-root user, healthchecks, SQLite-on-volume pattern kept from AeroRL.
+- Live at https://crossrocket.duckdns.org/ (HTTPS via Caddy reverse proxy, n8n untouched).
+- Backend tested end-to-end with SQLite TestClient; frontend `tsc` + `vite build` pass.
+
+Versions (rocketlab backend venv): Python 3.14.3, fastapi 0.116.1, uvicorn 0.35.0, pydantic 2.14.2, sqlalchemy 2.0.36, psycopg[binary] 3.2.2, alembic 1.13.1.
+
+Next: none. Project complete for today.
