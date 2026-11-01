@@ -185,7 +185,7 @@ def seed_demo(db: Session):
             algorithm=cfg["algorithm"],
             obs_mode=cfg["obs_mode"],
             seed=None,
-            config={"demo": True, "description": cfg["description"]},
+            config={"demo": True, "description": cfg["name"]},
             is_demo=True,
         )
         db.add(exp)
@@ -200,7 +200,7 @@ def seed_demo(db: Session):
                 algorithm=cfg["algorithm"],
                 obs_mode=cfg["obs_mode"],
                 seed=seed,
-                config=cfg["config"],
+                config={"demo": True, "description": cfg["name"]},
                 status="completed",
                 progress=100.0,
                 metrics=result["metrics"],
@@ -231,7 +231,7 @@ def main():
     Base.metadata.create_all(bind=engine)
     db = SessionLocal()
     try:
-        if settings.SEED_DEMO_DATA.lower() == "true":
+        if str(settings.SEED_DEMO_DATA).lower() == "true":
             seed_demo(db)
     finally:
         db.close()
