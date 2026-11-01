@@ -64,3 +64,27 @@ Commit: `6c356c8 feat: add FastAPI backend, SQLite seed, tests, and Dockerfile` 
 
 Next: user adds the OCI cloud ingress rule for port 8000, then
 curl http://152.70.40.141:8000/health (and /runs, /summary) from outside.
+
+## Phase E — status after user added OCI ingress rule
+- OCI cloud ingress for tcp 8000 added by user; external http://152.70.40.141:8000/health -> 200 OK.
+- Dashboard deployed at / and /dashboard (commit 1ecb97e).
+- External access confirmed: /, /dashboard, /health, /summary all return 200.
+
+## Domain: crossrocket.duckdns.org (pending)
+- To use the domain: point crossrocket.duckdns.org -> 152.70.40.141 via DuckDNS
+  (DuckDNS account/token needed; set the A record to the Oracle IP).
+- Once DNS resolves, add a Caddy reverse-proxy block to /home/ubuntu/stack/Caddyfile
+  (bind-mounted, read-only) and restart the stack-caddy-1 container:
+    crossrocket.duckdns.org {
+        reverse_proxy localhost:8000
+    }
+  Caddy will auto-provision HTTPS via Let's Encrypt. Existing n8n block
+  (crossn8n.duckdns.org -> n8n:5678) is untouched.
+- Do NOT modify Caddyfile until DNS is set, otherwise cert issuance fails.
+
+## Phase F (optional) — README + GitHub Actions
+- Not done yet: README with curl examples + GitHub Actions workflow running
+  pytest in backend/.
+
+Next (user): set crossrocket.duckdns.org -> 152.70.40.141 in DuckDNS, then I'll
+add the Caddy reverse proxy for HTTPS on the domain.
